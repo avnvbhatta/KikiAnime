@@ -7,7 +7,6 @@ import Results from './components/results/Results';
 function App() {
   return (
     <div>
-      <Home></Home>
       <Results></Results>
     </div>
   );

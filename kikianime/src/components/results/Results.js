@@ -1,55 +1,96 @@
 import React from "react";
 import "./Results.scss";
-
-const imgArray = [ 
-    "/images/unity.jpg",
-    "/images/moodmate.png",
-    "/images/sajjan.png",
-    "/images/download.png"
-]
+import Showcase from "../showcase/Showcase";
 
 
 class Results extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            images: [],
-            selectedImage: "",
-            loaded: false
+           items: {
+               core: [],
+               genres: [],
+               categories: [],
+               streamingLinks: []
+           },
+           isLoaded: false,
+           error: null
         }
     }
 
     componentDidMount(){
-        setInterval(() => {
+        let fetchURL = "https://kitsu.io/api/edge/anime/11469";
+        //Fetch for core data
+        fetch(fetchURL)
+        .then(res => res.json())
+        .then(
+            (result) => {
             this.setState({
-                images: imgArray,
-                selectedImage : imgArray[Math.floor(Math.random()*imgArray.length)],
-                loaded: true
+                items: {
+                    core: result.data
+                }
+            });
+
+            //Fetch for genres
+            fetch(this.state.items.core.relationships.genres.links.related)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        items: {
+                            genres: result.data
+                        }
+                    });
+                }
+            )
+
+            //Fetch for categories
+            fetch(this.state.items.core.relationships.categories.links.related)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        items: {
+                            categories: result.data
+                        }
+                    });
+                }
+            )
+
+            //Fetch for streaming links
+            fetch(this.state.items.core.relationships.streamingLinks.links.related)
+            .then(res => res.json())
+            .then(
+                (result) => {
+                    this.setState({
+                        items: {
+                            streamingLinks: result.data
+                        }
+                    });
+                }
+            )
+            this.setState({
+                isLoaded: true
             })
-        }, 2000);
-        
+            }
+        )
     }
 
-    getDiffImages(){
-        let imagesDiv = [];
-        for(let i=0; i<this.state.images.length; i++){
-            imagesDiv.push(
-                <img src={this.state.images[Math.floor(Math.random()*imgArray.length)]} alt=""/>
-            )
-        }
-        return imagesDiv;
-    }
     
+
     render(){
-        return(
-            <div>
-                <div className="fill"></div>
-                <p>This is the results component.</p>
-                {
-                    !this.state.loaded ? <p>Loading</p> : this.getDiffImages()
-                }
-            </div>
-        )
+        const { error, isLoaded, items } = this.state;
+        if (error) {
+            return <div>Error: {error.message}</div>;
+        } else if (!isLoaded) {
+            return <div>Loading...</div>;
+        } else {
+            return (
+                <div>
+                    <Showcase props={this.state}/>
+                </div>
+            );
+        }
     }
     
 }

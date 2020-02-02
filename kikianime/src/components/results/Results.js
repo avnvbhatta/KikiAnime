@@ -1,7 +1,7 @@
 import React from "react";
 import "./Results.scss";
 import Showcase from "../showcase/Showcase";
-
+import axios from 'axios'
 
 class Results extends React.Component{
     constructor(props){
@@ -9,7 +9,6 @@ class Results extends React.Component{
         this.state = {
            items: {
                core: [],
-               genres: [],
                categories: [],
                streamingLinks: []
            },
@@ -18,62 +17,31 @@ class Results extends React.Component{
         }
     }
 
-    componentDidMount(){
-        let fetchURL = "https://kitsu.io/api/edge/anime/11469";
-        //Fetch for core data
-        fetch(fetchURL)
-        .then(res => res.json())
-        .then(
-            (result) => {
-            this.setState({
-                items: {
-                    core: result.data
-                }
-            });
+    async componentDidMount(){
+        const tempItems = {
+            core: [],
+            categories: [],
+            streamingLinks: []
+        }
 
-            //Fetch for genres
-            fetch(this.state.items.core.relationships.genres.links.related)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        items: {
-                            genres: result.data
-                        }
-                    });
-                }
-            )
+        let coreCall = await axios.get("https://kitsu.io/api/edge/anime/11469");
+        let categoryCall = await axios.get("https://kitsu.io/api/edge/anime/11469/categories");
+        let streamingLinkCall = await axios.get("https://kitsu.io/api/edge/anime/11469/streaming-links");
+        
+        tempItems.core = coreCall.data.data;
+        tempItems.categories = categoryCall.data.data;
+        tempItems.streamingLinks = streamingLinkCall.data.data;
 
-            //Fetch for categories
-            fetch(this.state.items.core.relationships.categories.links.related)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        items: {
-                            categories: result.data
-                        }
-                    });
-                }
-            )
+        this.setState({
+            items: {
+                core: coreCall.data.data,
+                categories: categoryCall.data.data,
+                streamingLinks: streamingLinkCall.data.data
+            },
+            isLoaded: true
+        })  
 
-            //Fetch for streaming links
-            fetch(this.state.items.core.relationships.streamingLinks.links.related)
-            .then(res => res.json())
-            .then(
-                (result) => {
-                    this.setState({
-                        items: {
-                            streamingLinks: result.data
-                        }
-                    });
-                }
-            )
-            this.setState({
-                isLoaded: true
-            })
-            }
-        )
+
     }
 
     
@@ -87,7 +55,7 @@ class Results extends React.Component{
         } else {
             return (
                 <div>
-                    <Showcase props={this.state}/>
+                    <Showcase content={this.state.items}/>
                 </div>
             );
         }

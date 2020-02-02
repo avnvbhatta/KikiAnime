@@ -10,7 +10,30 @@
 
 .card-left{
     background: brown;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    img{
+        border: 2px solid white;
+    }
 }
 .card-right{
     background: fuchsia;
+}
+
+.card-right-content{
+    padding: 1em;
+}
+.category{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+p{
+    padding: 0.5em;
+    text-align: justify;
+    text-justify: inter-word;
 }

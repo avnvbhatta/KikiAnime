@@ -11,7 +11,6 @@ app.use(bodyParser.json());
 
 
 app.post('/', (req, res) => {
-  console.log(req.body);
   Vibrant.from(req.body.imgURL).getPalette()
   .then((palette) => res.send(palette))
   .catch(err =>{

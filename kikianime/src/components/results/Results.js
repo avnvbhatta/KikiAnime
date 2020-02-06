@@ -24,9 +24,10 @@ class Results extends React.Component{
             streamingLinks: []
         }
 
-        let coreCall = await axios.get("https://kitsu.io/api/edge/anime/11469");
-        let categoryCall = await axios.get("https://kitsu.io/api/edge/anime/11469/categories");
-        let streamingLinkCall = await axios.get("https://kitsu.io/api/edge/anime/11469/streaming-links");
+        let animeId = 4676;
+        let coreCall = await axios.get("https://kitsu.io/api/edge/anime/"+animeId);
+        let categoryCall = await axios.get("https://kitsu.io/api/edge/anime/"+animeId+"/categories");
+        let streamingLinkCall = await axios.get("https://kitsu.io/api/edge/anime/"+animeId+"/streaming-links");
         
         tempItems.core = coreCall.data.data;
         tempItems.categories = categoryCall.data.data;
@@ -64,3 +65,4 @@ class Results extends React.Component{
 }
 
 export default Results;
+

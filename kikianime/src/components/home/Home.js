@@ -32,7 +32,7 @@ class Home extends React.Component{
 
     getDiffImages(){
         let imagesDiv = [];
-        for(let i=0; i<this.state.images.length; i++){
+        for(let i=0; i<10; i++){
             imagesDiv.push(
                 <img src={this.state.images[Math.floor(Math.random()*imgArray.length)]} alt=""/>
             )
@@ -45,9 +45,12 @@ class Home extends React.Component{
             <div>
                 <div className="fill"></div>
                 <p>This is the home component.</p>
-                {
-                    !this.state.loaded ? <p>Loading</p> : this.getDiffImages()
-                }
+                <div className="image-container">
+                    {
+                        !this.state.loaded ? <p>Loading</p> : this.getDiffImages()
+                    }
+                </div>
+                
             </div>
         )
     }
